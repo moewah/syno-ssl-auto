@@ -24,7 +24,9 @@
 ### 1. 下载脚本
 
 ```bash
-cd ~/Desktop/syno-ssl-auto
+cd ~
+git clone https://github.com/moewah/syno-ssl-auto.git
+cd syno-ssl-auto
 ```
 
 ### 2. 配置 ssl.conf
@@ -94,7 +96,7 @@ bash install_synology_ssl.sh
 1. **自动部署证书**: 首次使用，自动申请证书并部署到 DSM
 2. **启用自动升级**: 启用 acme.sh 自动更新功能
 3. **关闭自动升级**: 关闭 acme.sh 自动更新功能
-4. **修复损坏环境**: 修复 acme.sh 安装损坏的问题
+4. **修复损坏环境**: 修复因 DSM 系统升级导致的变量被重置的问题
 5. **强制更新证书**: 手动强制重新申请并部署证书
 
 ## 🔧 工作原理
@@ -136,12 +138,12 @@ bash install_synology_ssl.sh
 ### 自动续期不工作
 
 1. 检查 cron 任务是否添加：`cat /etc/crontab`
-2. 手动测试续期：运行选项「5. 强制更新证书」
+2. 手动强制更新续期：运行选项「5. 强制更新证书」
 3. 查看系统日志检查错误
 
-### 环境损坏
+### 环境变量损坏
 
-运行选项「4. 修复损坏环境」来重置 acme.sh 安装
+在Synology DSM升级后，请运行选项「4. 修复损坏环境」修复因 DSM 系统升级导致的变量被重置的问题。
 
 ## 📄 许可证
 
@@ -163,6 +165,3 @@ MIT License
 ### 微信支付
 
 <img src="images/wechat.png" alt="微信支付" width="200">
-
-
-
