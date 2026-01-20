@@ -1,9 +1,6 @@
 # macOS
 .DS_Store
 
-# 敏感配置文件
-ssl.conf
-
 # 临时文件
 *.swp
 *.swo
