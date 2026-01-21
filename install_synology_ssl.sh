@@ -50,12 +50,28 @@ add_cron_job() {
 
     local cron_entry="0 2 */3 * * root /usr/local/share/acme.sh/acme.sh --cron --home /usr/local/share/acme.sh"
 
+    echo "" >> /etc/crontab
     echo "$cron_entry" >> /etc/crontab
 
-    if grep -q "$cron_entry" /etc/crontab; then
+    # 改进验证逻辑：检查最后一行是否匹配，或使用固定字符串搜索
+    local last_line=$(tail -1 /etc/crontab)
+    if [ "$last_line" = "$cron_entry" ] || grep -F "/usr/local/share/acme.sh/acme.sh --cron" /etc/crontab >/dev/null 2>&1; then
         echo "✅ 已成功添加SSL证书自动续期任务"
         echo "📅 执行时间: 每3天凌晨2点"
         echo "📝 任务内容: $cron_entry"
+
+        # 重启 crond 服务使任务生效
+        if command -v systemctl >/dev/null 2>&1; then
+            echo "🔄 正在重启 crond 服务..."
+            systemctl restart crond
+            if [ $? -eq 0 ]; then
+                echo "✅ crond 服务重启成功"
+            else
+                echo "⚠️  crond 服务重启失败，请手动重启系统或 crond 服务"
+            fi
+        else
+            echo "⚠️  系统不支持 systemctl，请手动重启系统或 crond 服务"
+        fi
         return 0
     else
         echo "❌ 添加cron任务失败，正在恢复备份..."
